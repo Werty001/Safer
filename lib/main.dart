@@ -12,12 +12,13 @@ void main() {
   runApp(MaterialApp(
     title: 'Safer',
     theme: ThemeData(
-      primarySwatch: Colors.orange,
+      primarySwatch: Colors.blueGrey,
     ),
     home: const HomePage(),
     routes: {
       '/login/': (context) => const LoginView(),
-      '/register/': (context) => const RegisterView()
+      '/register/': (context) => const RegisterView(),
+      '/main/': (context) => const MainPage(),
     },
   ));
 }
