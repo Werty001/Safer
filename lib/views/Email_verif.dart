@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:my_app/constants/routes.dart';
 
 class EmailVerifView extends StatefulWidget {
   const EmailVerifView({super.key});
@@ -13,24 +14,35 @@ class _EmailVerifViewState extends State<EmailVerifView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Register Verif'),
+        title: const Text('Verify your account'),
       ),
       body: Column(
         children: [
-          const Text('Pleace verify your user to continue'),
+          const Text(
+              "We've sent you an email in order to verify your account."),
+          const Text(
+              "If don't recive the email, pleace press the button below"),
           TextButton(
-            onPressed: () async {
-              final user = FirebaseAuth.instance.currentUser;
-              await user?.sendEmailVerification();
-            },
+            onPressed: () async {},
             child: const Text('Send email verification'),
           ),
           TextButton(
               onPressed: () {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/login/', (route) => false);
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  loginRoute,
+                  (route) => false,
+                );
               },
-              child: const Text('Login'))
+              child: const Text('Login')),
+          TextButton(
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushNamedAndRemoveUntil(
+                  registerRoute,
+                  (route) => false,
+                );
+              },
+              child: const Text('Restart'))
         ],
       ),
     );
