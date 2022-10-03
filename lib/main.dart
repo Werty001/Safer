@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/constants/routes.dart';
 import 'package:my_app/services/auth/auth_service.dart';
-import 'package:my_app/utilities/show_logout_dialog.dart';
 import 'package:my_app/views/Email_verif.dart';
 import 'package:my_app/views/login_view.dart';
 import 'package:my_app/views/main_view.dart';
