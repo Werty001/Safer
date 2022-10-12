@@ -67,7 +67,7 @@ class _LoginViewState extends State<LoginView> {
                 if (user?.isEmailVerify ?? false) {
                   //user email is verify
                   Navigator.of(context)
-                      .pushNamedAndRemoveUntil(mainRoute, (route) => false);
+                      .pushNamedAndRemoveUntil(riskRoute, (route) => false);
                 } else {
                   //user email is NOT verify
                   Navigator.of(context).pushNamedAndRemoveUntil(

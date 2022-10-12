@@ -1,19 +1,37 @@
+import 'dart:async';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' show join;
 import 'crud_exceptions.dart';
+import 'user_service.dart';
 
 class RiskService {
   Database? _db;
+  List<DataBaseRisk> _risks = [];
+
+//singleton in Flutter (whit this we can crate the isntance only one time)
+  static final RiskService _shared = RiskService._sharedInstance();
+  RiskService._sharedInstance();
+  factory RiskService() => _shared;
+
+  final _risksStreamController =
+      StreamController<List<DataBaseRisk>>.broadcast();
+
+  Future<void> _cacheRisks() async {
+    final allRisks = await getAllRisks();
+    _risks = allRisks.toList();
+    _risksStreamController.add(_risks);
+  }
 
 //Update a Risk type with a particular 'id'
+//FALTA AGREGAR EL RESTO DE LOS PARAMETROS
   Future<DataBaseRisk> updateRiskType({
     required DataBaseRisk risk,
     required String type,
   }) async {
+    await _ensureDbIsOpen();
     final db = _getDatbaseOrThrow();
     await getRisk(id: risk.id);
     final updateCount = await db.update(riskTable, {
@@ -23,10 +41,16 @@ class RiskService {
     if (updateCount == 0) {
       throw CouldNotUpdateRisk();
     } else {
-      return await getRisk(id: risk.id);
+      final updatedRisk = await getRisk(id: risk.id);
+      _risks.removeWhere((risk) => risk.id == updatedRisk.id);
+      _risks.add(updatedRisk);
+      _risksStreamController.add(_risks);
+      return updatedRisk;
     }
   }
 
+//Grab all the risks listed on the DB
+  Stream<List<DataBaseRisk>> get allRisks => _risksStreamController.stream;
 //Grab all the notes in the Database
   Future<Iterable<DataBaseRisk>> getAllRisks() async {
     final db = _getDatbaseOrThrow();
@@ -36,6 +60,7 @@ class RiskService {
 
 //Grab a Risk with a particualr 'id'
   Future<DataBaseRisk> getRisk({required int id}) async {
+    await _ensureDbIsOpen();
     final db = _getDatbaseOrThrow();
     final risks = await db.query(
       riskTable,
@@ -46,17 +71,26 @@ class RiskService {
     if (risks.isEmpty) {
       throw CouldNotFindRisk();
     }
-    return DataBaseRisk.fromRow(risks.first);
+    final risk = DataBaseRisk.fromRow(risks.first);
+    _risks.removeWhere((risk) => risk.id == id);
+    _risks.add(risk);
+    _risksStreamController.add(_risks);
+    return risk;
   }
 
-//Detelete all risk in the Database
+//Delete all risk in the Database
   Future<int> deleteAllRisks() async {
+    await _ensureDbIsOpen();
     final db = _getDatbaseOrThrow();
-    return await db.delete(riskTable);
+    final numDeletions = await db.delete(riskTable);
+    _risks = [];
+    _risksStreamController.add(_risks);
+    return numDeletions;
   }
 
 //Delete a Risk with a particualr 'id'
   Future<void> deleteRisk({required int id}) async {
+    await _ensureDbIsOpen();
     final db = _getDatbaseOrThrow();
     final deleteCount = await db.delete(
       riskTable,
@@ -65,11 +99,15 @@ class RiskService {
     );
     if (deleteCount == 0) {
       throw CouldNotDeleteRisk();
+    } else {
+      _risks.removeWhere((risk) => risk.id == id);
+      _risksStreamController.add(_risks);
     }
   }
 
 //Create a new risk checking if already exist
   Future<DataBaseRisk> createRisk({required DataBaseUser owner}) async {
+    await _ensureDbIsOpen();
     final db = _getDatbaseOrThrow();
 
     //Checking OWNER of the RISK
@@ -104,66 +142,9 @@ class RiskService {
       riskEpp: 0,
       riskSync: true,
     );
-
+    _risks.add(risk);
+    _risksStreamController.add(_risks);
     return risk;
-  }
-
-//Grab a User whith a particular 'email'
-  Future<DataBaseUser> getUser({required String email}) async {
-    final db = _getDatbaseOrThrow();
-    final result = await db.query(
-      userTable,
-      limit: 1,
-      where: 'email = ?',
-      whereArgs: [email.toLowerCase()],
-    );
-    if (result.isEmpty) {
-      throw CouldNotFindUser();
-    } else {
-      return DataBaseUser.fromRow(result.first);
-    }
-  }
-
-//Create USER if not already exist in the DB or throw an error
-  Future<DataBaseUser> createUser({required String email}) async {
-    final db = _getDatbaseOrThrow();
-    final result = await db.query(
-      userTable,
-      limit: 1,
-      where: 'email = ?',
-      whereArgs: [email.toLowerCase()],
-    );
-    if (result.isNotEmpty) {
-      throw UserAlreadyExist();
-    }
-    final userId = await db.insert(userTable, {
-      emailColumn: email.toLowerCase(),
-    });
-
-    return DataBaseUser(
-      id: userId,
-      email: email,
-      name: "name",
-      verif: false,
-      audit: false,
-      admin: false,
-      profile: 0,
-      location: 0,
-      usersync: false,
-    );
-  }
-
-//Delete USER using email adress
-  Future<void> deleteUser({required String email}) async {
-    final db = _getDatbaseOrThrow();
-    final deletedCount = await db.delete(
-      userTable,
-      where: 'email = ?',
-      whereArgs: [email.toLowerCase()],
-    );
-    if (deletedCount != 1) {
-      throw CouldNotDeleteUser();
-    }
   }
 
 //Function that return a DB or auto manage a Exeption
@@ -187,6 +168,15 @@ class RiskService {
     }
   }
 
+//Ensuting that th DB is already open
+  Future<void> _ensureDbIsOpen() async {
+    try {
+      await open();
+    } on DataBaseAlreadyOpenException {
+      //empty
+    }
+  }
+
 //Open the Database
   Future<void> open() async {
     if (_db != null) {
@@ -197,60 +187,13 @@ class RiskService {
       final dbPath = join(docsPath.path, dbName);
       final db = await openDatabase(dbPath);
       _db = db;
-      //Create USER table
-      await db.execute(createUserTable);
       //Create RISK table
       await db.execute(createRiskTable);
+      await _cacheRisks();
     } on MissingPlatformDirectoryException {
       throw UnableToGetDocumentsDirectory();
     }
   }
-}
-
-@immutable
-class DataBaseUser {
-  final int id;
-  final String email;
-  final String name;
-  final bool verif;
-  final bool audit;
-  final bool admin;
-  final int profile;
-  final int location;
-  final bool usersync;
-
-  const DataBaseUser({
-    required this.id,
-    required this.email,
-    required this.name,
-    required this.verif,
-    required this.audit,
-    required this.admin,
-    required this.profile,
-    required this.location,
-    required this.usersync,
-  });
-
-  DataBaseUser.fromRow(Map<String, Object?> map)
-      : id = map[idColumn] as int,
-        email = map[emailColumn] as String,
-        name = map[nameColumn] as String,
-        verif = (map[verifColumn] as int) == 1 ? true : false,
-        audit = (map[auditColumn] as int) == 1 ? true : false,
-        admin = (map[adminColumn] as int) == 1 ? true : false,
-        profile = map[profileColumn] as int,
-        location = map[locationColumn] as int,
-        usersync = (map[syncColumn] as int) == 1 ? true : false;
-
-  @override
-  String toString() =>
-      'Person, name: $name ID: $id, email: $email, verif: $verif, audit: $audit, admin: $admin, profile:$profile, location: $location, sync: $usersync';
-
-  @override
-  bool operator ==(covariant DataBaseUser other) => id == other.id;
-
-  @override
-  int get hashCode => id.hashCode;
 }
 
 class DataBaseRisk {
@@ -295,7 +238,7 @@ class DataBaseRisk {
       'Risk, ID: $id, Risk Type: $riskType, Risk Subtype: $riskSubType, Risk Damage Score: $riskDamage, Profiles: $riskProfile, Trainings: $riskTraining, Risk Location: $riskLocation, Risk Epp: $riskEpp';
 
   @override
-  bool operator ==(covariant DataBaseUser other) => id == other.id;
+  bool operator ==(covariant DataBaseRisk other) => id == other.id;
 
   @override
   int get hashCode => id.hashCode;
@@ -303,19 +246,6 @@ class DataBaseRisk {
 
 const dbName = 'risk.db';
 const riskTable = 'risk';
-const userTable = 'user';
-//USER Database Columns
-const idColumn = 'user_id';
-const emailColumn = 'user_email';
-const nameColumn = 'user_name';
-const verifColumn = 'user_verif';
-const auditColumn = 'user_audit';
-const adminColumn = 'user_admin';
-const profileColumn = 'user_profile';
-const trainingColumn = 'user_training';
-const eppColumn = 'user_epp';
-const locationColumn = 'user_location';
-const syncColumn = 'sync';
 //RISK Database Columns
 const idRiskColumn = 'risk_id';
 const riskNameColumn = 'risk_name';
@@ -326,22 +256,8 @@ const riskProfileColumn = 'risk_profile';
 const riskTrainingColumn = 'risk_training';
 const riskLocationColumn = 'risk_location';
 const riskEppColumn = 'risk_epp';
+const syncColumn = 'sync';
 //SQL Code to create tables
-//USER TABLE
-const createUserTable = '''CREATE TABLE IF NOT EXISTS "user" (
-	"user_id"	INTEGER NOT NULL,
-	"user_email"	TEXT NOT NULL DEFAULT 'none' UNIQUE,
-	"user_name"	TEXT NOT NULL DEFAULT 'none',
-	"user_verif"	BLOB NOT NULL DEFAULT 'false',
-	"user_audit"	BLOB NOT NULL DEFAULT 'false',
-	"user_admin"	BLOB NOT NULL DEFAULT 'false',
-	"user_profile"	INTEGER NOT NULL DEFAULT 'none',
-	"user_location"	INTEGER NOT NULL DEFAULT 'none',
-	"sync"	BLOB NOT NULL DEFAULT 'false',
-	FOREIGN KEY("user_location") REFERENCES "location"("location_id"),
-	FOREIGN KEY("user_profile") REFERENCES "job_profile"("profile_id"),
-	PRIMARY KEY("user_id" AUTOINCREMENT)
-);''';
 //RISK TABLE
 const createRiskTable = '''CREATE TABLE IF NOT EXISTS "risk" (
 	"risk_id"	INTEGER,

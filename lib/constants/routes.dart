@@ -1,4 +1,4 @@
 const loginRoute = '/login/';
 const registerRoute = '/register/';
-const mainRoute = '/main/';
+const riskRoute = '/risk/';
 const verifEmailRoute = '/verifemail/';
