@@ -3,9 +3,9 @@ import 'package:my_app/services/auth/auth_service.dart';
 import 'package:my_app/services/crud/risk_service.dart';
 import 'package:my_app/services/crud/user_service.dart';
 
-import '../constants/routes.dart';
-import '../enums/menu_actions.dart';
-import '../utilities/show_logout_dialog.dart';
+import '../../constants/routes.dart';
+import '../../enums/menu_actions.dart';
+import '../../utilities/show_logout_dialog.dart';
 
 class RiskPage extends StatefulWidget {
   const RiskPage({super.key});
@@ -39,6 +39,12 @@ class _RiskPageState extends State<RiskPage> {
     return Scaffold(
       appBar: AppBar(
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(newRiskRoute);
+            },
+            icon: const Icon(Icons.add),
+          ),
           PopupMenuButton<MenuAction>(
             onSelected: (value) async {
               switch (value) {
@@ -71,9 +77,9 @@ class _RiskPageState extends State<RiskPage> {
               return StreamBuilder(builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.waiting:
-                    return const Text('Waiting the see all the risks!..');
-                  default:
                     return const CircularProgressIndicator();
+                  default:
+                    return const Text('Waiting the see all the risks!..');
                 }
               });
             default:

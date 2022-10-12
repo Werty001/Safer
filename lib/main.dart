@@ -3,9 +3,9 @@ import 'package:my_app/constants/routes.dart';
 import 'package:my_app/services/auth/auth_service.dart';
 import 'package:my_app/views/Email_verif.dart';
 import 'package:my_app/views/login_view.dart';
-import 'package:my_app/views/risks_view.dart';
+import 'package:my_app/views/risks/new_risk_view.dart';
+import 'package:my_app/views/risks/risks_view.dart';
 import 'package:my_app/views/register_view.dart';
-import 'dart:developer' as devtools show log;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +20,7 @@ void main() {
       registerRoute: (context) => const RegisterView(),
       riskRoute: (context) => const RiskPage(),
       verifEmailRoute: (context) => const EmailVerifView(),
+      newRiskRoute: (context) => const NewRiskView(),
     },
   ));
 }
