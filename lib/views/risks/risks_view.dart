@@ -74,14 +74,17 @@ class _RiskPageState extends State<RiskPage> {
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
-              return StreamBuilder(builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.waiting:
-                    return const CircularProgressIndicator();
-                  default:
-                    return const Text('Waiting the see all the risks!..');
-                }
-              });
+              return StreamBuilder(
+                  stream: _riskService.allRisks,
+                  builder: (context, snapshot) {
+                    switch (snapshot.connectionState) {
+                      case ConnectionState.waiting:
+                      case ConnectionState.active:
+                        return const Text('Waiting the see all the risks!..');
+                      default:
+                        return const CircularProgressIndicator();
+                    }
+                  });
             default:
               return const CircularProgressIndicator();
           }

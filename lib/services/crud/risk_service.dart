@@ -106,7 +106,7 @@ class RiskService {
   }
 
 //Create a new risk checking if already exist
-  Future<DataBaseRisk> createRisk({required DataBaseUser owner}) async {
+  Future<DataBaseRisk> createRisk(/*{required DataBaseUser owner}*/) async {
     await _ensureDbIsOpen();
     final db = _getDatbaseOrThrow();
 
