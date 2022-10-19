@@ -99,11 +99,11 @@ abstract class AppLocalizations {
   /// **'Log out'**
   String get logout_button;
 
-  /// No description provided for @note.
+  /// No description provided for @risk.
   ///
   /// In en, this message translates to:
-  /// **'Note'**
-  String get note;
+  /// **'risk'**
+  String get risk;
 
   /// No description provided for @cancel.
   ///
@@ -159,23 +159,23 @@ abstract class AppLocalizations {
   /// **'Restart'**
   String get restart;
 
-  /// No description provided for @start_typing_your_note.
+  /// No description provided for @start_typing_your_risk.
   ///
   /// In en, this message translates to:
-  /// **'Start typing your note'**
-  String get start_typing_your_note;
+  /// **'Start typing your risk'**
+  String get start_typing_your_risk;
 
-  /// No description provided for @delete_note_prompt.
+  /// No description provided for @delete_risk_prompt.
   ///
   /// In en, this message translates to:
-  /// **'Are you sure you want to delete this note?'**
-  String get delete_note_prompt;
+  /// **'Are you sure you want to delete this risk?'**
+  String get delete_risk_prompt;
 
-  /// No description provided for @cannot_share_empty_note_prompt.
+  /// No description provided for @cannot_share_empty_risk_prompt.
   ///
   /// In en, this message translates to:
-  /// **'Cannot share an empty note!'**
-  String get cannot_share_empty_note_prompt;
+  /// **'Cannot share an empty risk!'**
+  String get cannot_share_empty_risk_prompt;
 
   /// No description provided for @generic_error_prompt.
   ///
@@ -222,7 +222,7 @@ abstract class AppLocalizations {
   /// No description provided for @login_view_prompt.
   ///
   /// In en, this message translates to:
-  /// **'Please log in to your account in order to interact with and create notes!'**
+  /// **'Please log in to your account in order to interact with and create risks!'**
   String get login_view_prompt;
 
   /// No description provided for @login_view_forgot_password.
@@ -306,7 +306,7 @@ abstract class AppLocalizations {
   /// No description provided for @register_view_prompt.
   ///
   /// In en, this message translates to:
-  /// **'Enter your email and password to see your notes!'**
+  /// **'Enter your email and password to see your risks!'**
   String get register_view_prompt;
 
   /// No description provided for @register_view_already_registered.
@@ -327,11 +327,11 @@ abstract class AppLocalizations {
   /// **'Send email verification'**
   String get verify_email_send_email_verification;
 
-  /// No description provided for @notes_title.
+  /// No description provided for @risks_title.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =0{No notes yet} =1{1 note} other{{count} notes}}'**
-  String notes_title(num count);
+  /// **'{count, plural, =0{No risks yet} =1{1 risk} other{{count} risks}}'**
+  String risks_title(num count);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

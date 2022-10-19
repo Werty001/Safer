@@ -12,7 +12,7 @@
 
 #import <Foundation/Foundation.h>
 
-/// Ad Impression event. This event signifies when a user sees an ad impression. Note: If you supply
+/// Ad Impression event. This event signifies when a user sees an ad impression. risk: If you supply
 /// the @c AnalyticsParameterValue parameter, you must also supply the @c AnalyticsParameterCurrency
 /// parameter so that revenue metrics can be computed accurately. Params:
 ///
@@ -28,7 +28,7 @@ static NSString *const kFIREventAdImpression NS_SWIFT_NAME(AnalyticsEventAdImpre
     @"ad_impression";
 
 /// Add Payment Info event. This event signifies that a user has submitted their payment
-/// information. Note: If you supply the @c AnalyticsParameterValue parameter, you must also supply
+/// information. risk: If you supply the @c AnalyticsParameterValue parameter, you must also supply
 /// the @c AnalyticsParameterCurrency parameter so that revenue metrics can be computed accurately.
 /// Params:
 ///
@@ -43,7 +43,7 @@ static NSString *const kFIREventAddPaymentInfo NS_SWIFT_NAME(AnalyticsEventAddPa
     @"add_payment_info";
 
 /// Add Shipping Info event. This event signifies that a user has submitted their shipping
-/// information. Note: If you supply the @c AnalyticsParameterValue parameter, you must also supply
+/// information. risk: If you supply the @c AnalyticsParameterValue parameter, you must also supply
 /// the @c AnalyticsParameterCurrency parameter so that revenue metrics can be computed accurately.
 /// Params:
 ///
@@ -59,7 +59,7 @@ static NSString *const kFIREventAddShippingInfo NS_SWIFT_NAME(AnalyticsEventAddS
 
 /// E-Commerce Add To Cart event. This event signifies that an item(s) was added to a cart for
 /// purchase. Add this event to a funnel with @c AnalyticsEventPurchase to gauge the effectiveness
-/// of your checkout process. Note: If you supply the @c AnalyticsParameterValue parameter, you must
+/// of your checkout process. risk: If you supply the @c AnalyticsParameterValue parameter, you must
 /// also supply the @c AnalyticsParameterCurrency parameter so that revenue metrics can be computed
 /// accurately. Params:
 ///
@@ -71,7 +71,7 @@ static NSString *const kFIREventAddShippingInfo NS_SWIFT_NAME(AnalyticsEventAddS
 static NSString *const kFIREventAddToCart NS_SWIFT_NAME(AnalyticsEventAddToCart) = @"add_to_cart";
 
 /// E-Commerce Add To Wishlist event. This event signifies that an item was added to a wishlist. Use
-/// this event to identify popular gift items. Note: If you supply the @c AnalyticsParameterValue
+/// this event to identify popular gift items. risk: If you supply the @c AnalyticsParameterValue
 /// parameter, you must also supply the @c AnalyticsParameterCurrency parameter so that revenue
 /// metrics can be computed accurately. Params:
 ///
@@ -91,7 +91,7 @@ static NSString *const kFIREventAppOpen NS_SWIFT_NAME(AnalyticsEventAppOpen) = @
 
 /// E-Commerce Begin Checkout event. This event signifies that a user has begun the process of
 /// checking out. Add this event to a funnel with your @c AnalyticsEventPurchase event to gauge the
-/// effectiveness of your checkout process. Note: If you supply the @c AnalyticsParameterValue
+/// effectiveness of your checkout process. risk: If you supply the @c AnalyticsParameterValue
 /// parameter, you must also supply the @c AnalyticsParameterCurrency parameter so that revenue
 /// metrics can be computed accurately. Params:
 ///
@@ -105,7 +105,7 @@ static NSString *const kFIREventBeginCheckout NS_SWIFT_NAME(AnalyticsEventBeginC
     @"begin_checkout";
 
 /// Campaign Detail event. Log this event to supply the referral details of a re-engagement
-/// campaign. Note: you must supply at least one of the required parameters
+/// campaign. risk: you must supply at least one of the required parameters
 /// AnalyticsParameterSource, AnalyticsParameterMedium or AnalyticsParameterCampaign. Params:
 ///
 /// <ul>
@@ -136,7 +136,7 @@ static NSString *const kFIREventEarnVirtualCurrency
     NS_SWIFT_NAME(AnalyticsEventEarnVirtualCurrency) = @"earn_virtual_currency";
 
 /// Generate Lead event. Log this event when a lead has been generated in the app to understand the
-/// efficacy of your install and re-engagement campaigns. Note: If you supply the
+/// efficacy of your install and re-engagement campaigns. risk: If you supply the
 /// @c AnalyticsParameterValue parameter, you must also supply the @c AnalyticsParameterCurrency
 /// parameter so that revenue metrics can be computed accurately. Params:
 ///
@@ -195,9 +195,9 @@ static NSString *const kFIREventLogin NS_SWIFT_NAME(AnalyticsEventLogin) = @"log
 /// </ul>
 static NSString *const kFIREventPostScore NS_SWIFT_NAME(AnalyticsEventPostScore) = @"post_score";
 
-/// E-Commerce Purchase event. This event signifies that an item(s) was purchased by a user. Note:
+/// E-Commerce Purchase event. This event signifies that an item(s) was purchased by a user. risk:
 /// This is different from the in-app purchase event, which is reported automatically for App
-/// Store-based apps. Note: If you supply the @c AnalyticsParameterValue parameter, you must also
+/// Store-based apps. risk: If you supply the @c AnalyticsParameterValue parameter, you must also
 /// supply the @c AnalyticsParameterCurrency parameter so that revenue metrics can be computed
 /// accurately. Params:
 ///
@@ -213,7 +213,7 @@ static NSString *const kFIREventPostScore NS_SWIFT_NAME(AnalyticsEventPostScore)
 /// </ul>
 static NSString *const kFIREventPurchase NS_SWIFT_NAME(AnalyticsEventPurchase) = @"purchase";
 
-/// E-Commerce Refund event. This event signifies that a refund was issued. Note: If you supply the
+/// E-Commerce Refund event. This event signifies that a refund was issued. risk: If you supply the
 /// @c AnalyticsParameterValue parameter, you must also supply the @c AnalyticsParameterCurrency
 /// parameter so that revenue metrics can be computed accurately. Params:
 ///
@@ -230,7 +230,7 @@ static NSString *const kFIREventPurchase NS_SWIFT_NAME(AnalyticsEventPurchase) =
 static NSString *const kFIREventRefund NS_SWIFT_NAME(AnalyticsEventRefund) = @"refund";
 
 /// E-Commerce Remove from Cart event. This event signifies that an item(s) was removed from a cart.
-/// Note: If you supply the @c AnalyticsParameterValue parameter, you must also supply the @c
+/// risk: If you supply the @c AnalyticsParameterValue parameter, you must also supply the @c
 /// AnalyticsParameterCurrency parameter so that revenue metrics can be computed accurately. Params:
 ///
 /// <ul>
@@ -356,7 +356,7 @@ static NSString *const kFIREventUnlockAchievement NS_SWIFT_NAME(AnalyticsEventUn
     @"unlock_achievement";
 
 /// E-commerce View Cart event. This event signifies that a user has viewed their cart. Use this to
-/// analyze your purchase funnel. Note: If you supply the @c AnalyticsParameterValue parameter, you
+/// analyze your purchase funnel. risk: If you supply the @c AnalyticsParameterValue parameter, you
 /// must also supply the @c AnalyticsParameterCurrency parameter so that revenue metrics can be
 /// computed accurately. Params:
 ///
@@ -369,7 +369,7 @@ static NSString *const kFIREventViewCart NS_SWIFT_NAME(AnalyticsEventViewCart) =
 
 /// View Item event. This event signifies that a user has viewed an item. Use the appropriate
 /// parameters to contextualize the event. Use this event to discover the most popular items viewed
-/// in your app. Note: If you supply the @c AnalyticsParameterValue parameter, you must also supply
+/// in your app. risk: If you supply the @c AnalyticsParameterValue parameter, you must also supply
 /// the @c AnalyticsParameterCurrency parameter so that revenue metrics can be computed accurately.
 /// Params:
 ///

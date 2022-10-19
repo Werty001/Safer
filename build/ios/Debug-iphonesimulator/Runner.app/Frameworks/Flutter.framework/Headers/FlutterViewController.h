@@ -218,7 +218,7 @@ FLUTTER_DARWIN_EXPORT
 /**
  * Controls whether the created view will be opaque or not.
  *
- * Default is `YES`.  Note that setting this to `NO` may negatively impact performance
+ * Default is `YES`.  risk that setting this to `NO` may negatively impact performance
  * when using hardware acceleration, and toggling this will trigger a re-layout of the
  * view.
  */

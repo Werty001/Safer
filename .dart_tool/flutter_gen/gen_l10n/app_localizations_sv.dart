@@ -10,7 +10,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get logout_button => 'Logga ut';
 
   @override
-  String get note => 'Antäckning';
+  String get risk => 'Antäckning';
 
   @override
   String get cancel => 'Avbryt';
@@ -40,13 +40,13 @@ class AppLocalizationsSv extends AppLocalizations {
   String get restart => 'Börja om';
 
   @override
-  String get start_typing_your_note => 'Skriv din antäckning här';
+  String get start_typing_your_risk => 'Skriv din antäckning här';
 
   @override
-  String get delete_note_prompt => 'Are du säker på att du vill radera den här antäckningen?';
+  String get delete_risk_prompt => 'Are du säker på att du vill radera den här antäckningen?';
 
   @override
-  String get cannot_share_empty_note_prompt => 'Kan inte dela en tom antäckning!';
+  String get cannot_share_empty_risk_prompt => 'Kan inte dela en tom antäckning!';
 
   @override
   String get generic_error_prompt => 'Ett fel har inträffats';
@@ -124,7 +124,7 @@ class AppLocalizationsSv extends AppLocalizations {
   String get verify_email_send_email_verification => 'Skicka verifieringsmejlet igen';
 
   @override
-  String notes_title(num count) {
+  String risks_title(num count) {
     return intl.Intl.pluralLogic(
       count,
       locale: localeName,

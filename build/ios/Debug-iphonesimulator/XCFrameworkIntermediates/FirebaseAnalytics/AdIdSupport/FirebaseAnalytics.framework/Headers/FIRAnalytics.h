@@ -10,7 +10,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// user properties. See <a href="http://goo.gl/gz8SLz">the developer guides</a> for general
 /// information on using Firebase Analytics in your apps.
 ///
-/// @note The Analytics SDK uses SQLite to persist events and other app-specific data. Calling
+/// @risk The Analytics SDK uses SQLite to persist events and other app-specific data. Calling
 ///     certain thread-unsafe global SQLite methods like `sqlite3_shutdown()` can result in
 ///     unexpected crashes at runtime.
 NS_SWIFT_NAME(Analytics)
@@ -59,7 +59,7 @@ NS_SWIFT_NAME(Analytics)
 /// @param name The name of the event. Should contain 1 to 40 alphanumeric characters or
 ///     underscores. The name must start with an alphabetic character. Some event names are
 ///     reserved. See FIREventNames.h for the list of reserved event names. The "firebase_",
-///     "google_", and "ga_" prefixes are reserved and should not be used. Note that event names are
+///     "google_", and "ga_" prefixes are reserved and should not be used. risk that event names are
 ///     case-sensitive and that logging two events whose names differ only in case will result in
 ///     two distinct events. To manually log screen view events, use the `screen_view` event name.
 /// @param parameters The dictionary of event parameters. Passing `nil` indicates that the event has

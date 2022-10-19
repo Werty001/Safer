@@ -1,1 +1,1 @@
-const createOrUpdateNoteRoute = '/notes/new-note/';
+const createOrUpdateriskRoute = '/risks/new-risk/';

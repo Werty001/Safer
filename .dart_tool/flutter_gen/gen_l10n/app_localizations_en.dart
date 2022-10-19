@@ -10,7 +10,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logout_button => 'Log out';
 
   @override
-  String get note => 'Note';
+  String get risk => 'risk';
 
   @override
   String get cancel => 'Cancel';
@@ -40,13 +40,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get restart => 'Restart';
 
   @override
-  String get start_typing_your_note => 'Start typing your note';
+  String get start_typing_your_risk => 'Start typing your risk';
 
   @override
-  String get delete_note_prompt => 'Are you sure you want to delete this note?';
+  String get delete_risk_prompt => 'Are you sure you want to delete this risk?';
 
   @override
-  String get cannot_share_empty_note_prompt => 'Cannot share an empty note!';
+  String get cannot_share_empty_risk_prompt => 'Cannot share an empty risk!';
 
   @override
   String get generic_error_prompt => 'An error occurred';
@@ -70,7 +70,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get login_error_auth_error => 'Authentication error';
 
   @override
-  String get login_view_prompt => 'Please log in to your account in order to interact with and create notes!';
+  String get login_view_prompt => 'Please log in to your account in order to interact with and create risks!';
 
   @override
   String get login_view_forgot_password => 'I forgot my password';
@@ -112,7 +112,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get register_error_invalid_email => 'The email address you entered appears to be invalid. Please try another email address!';
 
   @override
-  String get register_view_prompt => 'Enter your email and password to see your notes!';
+  String get register_view_prompt => 'Enter your email and password to see your risks!';
 
   @override
   String get register_view_already_registered => 'Already registered? Login here!';
@@ -124,13 +124,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get verify_email_send_email_verification => 'Send email verification';
 
   @override
-  String notes_title(num count) {
+  String risks_title(num count) {
     return intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      zero: 'No notes yet',
-      one: '1 note',
-      other: '$count notes',
+      zero: 'No risks yet',
+      one: '1 risk',
+      other: '$count risks',
     );
   }
 }

@@ -1,46 +1,46 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:my_app/services/cloud/cloud_note.dart';
+import 'package:my_app/services/cloud/cloud_risk.dart';
 import 'package:my_app/services/cloud/cloud_storage_constants.dart';
 import 'package:my_app/services/cloud/cloud_storage_exceptions.dart';
 
 class FirebaseCloudStorage {
-  final notes = FirebaseFirestore.instance.collection('notes');
+  final risks = FirebaseFirestore.instance.collection('risks');
 
-  Future<void> deleteNote({required String documentId}) async {
+  Future<void> deleterisk({required String documentId}) async {
     try {
-      await notes.doc(documentId).delete();
+      await risks.doc(documentId).delete();
     } catch (e) {
-      throw CouldNotDeleteNoteException();
+      throw CouldNotDeleteriskException();
     }
   }
 
-  Future<void> updateNote({
+  Future<void> updaterisk({
     required String documentId,
     required String text,
   }) async {
     try {
-      await notes.doc(documentId).update({textFieldName: text});
+      await risks.doc(documentId).update({textFieldName: text});
     } catch (e) {
-      throw CouldNotUpdateNoteException();
+      throw CouldNotUpdateriskException();
     }
   }
 
-  Stream<Iterable<CloudNote>> allNotes({required String ownerUserId}) {
-    final allNotes = notes
+  Stream<Iterable<Cloudrisk>> allrisks({required String ownerUserId}) {
+    final allrisks = risks
         .where(ownerUserIdFieldName, isEqualTo: ownerUserId)
         .snapshots()
-        .map((event) => event.docs.map((doc) => CloudNote.fromSnapshot(doc)));
-    return allNotes;
+        .map((event) => event.docs.map((doc) => Cloudrisk.fromSnapshot(doc)));
+    return allrisks;
   }
 
-  Future<CloudNote> createNewNote({required String ownerUserId}) async {
-    final document = await notes.add({
+  Future<Cloudrisk> createNewrisk({required String ownerUserId}) async {
+    final document = await risks.add({
       ownerUserIdFieldName: ownerUserId,
       textFieldName: '',
     });
-    final fetchedNote = await document.get();
-    return CloudNote(
-      documentId: fetchedNote.id,
+    final fetchedrisk = await document.get();
+    return Cloudrisk(
+      documentId: fetchedrisk.id,
       ownerUserId: ownerUserId,
       text: '',
     );
