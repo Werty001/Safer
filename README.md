@@ -1,9 +1,16 @@
-# Safer HSE APP
+# my_app
 
+A new Flutter project.
 
-Safer tries to solve the problems of logistics, communication and control that exist in the management of Health, Safety and Environment typical of companies with many work points.
-It covers in a collaborative and scalable way, all types of jobs that involve risks and therefore care when carrying them out.
-- Location of works (Identification, location, route)
-- Generation of reports and site inspections based on the risks present in the works.
-- Attachment of multimedia files within the reports.
-- Generation of incidents with alarm and accident statistics.
+## Getting Started
+
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+
+For help getting started with Flutter, view our
+[online documentation](https://flutter.dev/docs), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
