@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/constants/routes.dart';
 import 'package:my_app/enums/menu_action.dart';
 import 'package:my_app/extensions/buildcontext/loc.dart';
 import 'package:my_app/services/auth/auth_service.dart';
 import 'package:my_app/services/auth/bloc/auth_bloc.dart';
 import 'package:my_app/services/auth/bloc/auth_event.dart';
-import 'package:my_app/services/cloud/cloud_risk.dart';
 import 'package:my_app/services/cloud/firebase_cloud_storage.dart';
 import 'package:my_app/utilities/dialogs/logout_dialog.dart';
+import 'package:my_app/views/Jobs_Profile/job_profile_view.dart';
+import 'package:my_app/views/Locations/locations_view.dart';
 import 'package:my_app/views/Risks/risks_view.dart';
-import 'package:my_app/views/risks/risks_list_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show ReadContext;
+import 'package:my_app/views/Work_Auth/current_works_view.dart';
+import 'package:my_app/views/Work_Auth/work_auth_view.dart';
+import 'package:my_app/views/user_view.dart';
 
 extension Count<T extends Iterable> on Stream<T> {
   Stream<int> get getLength => map((event) => event.length);
@@ -36,7 +38,32 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Safer')),
+      appBar: AppBar(
+        title: const Text('Safer'),
+        actions: [
+          PopupMenuButton<MenuAction>(
+            onSelected: (value) async {
+              switch (value) {
+                case MenuAction.logout:
+                  final shouldLogout = await showLogOutDialog(context);
+                  if (shouldLogout) {
+                    context.read<AuthBloc>().add(
+                          const AuthEventLogOut(),
+                        );
+                  }
+              }
+            },
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem<MenuAction>(
+                  value: MenuAction.logout,
+                  child: Text(context.loc.logout_button),
+                ),
+              ];
+            },
+          )
+        ],
+      ),
       body: const Center(
         child: Text('HOME'),
       ),
@@ -59,11 +86,42 @@ class NavigationDrawer extends StatelessWidget {
             ]),
       ));
 
-  Widget buildHeader(BuildContext context) => Container(
-        padding: EdgeInsets.only(
-          top: MediaQuery.of(context).padding.top,
+  Widget buildHeader(BuildContext context) => Material(
+      color: Colors.orange.shade700,
+      child: InkWell(
+        onTap: () {
+          //Navigate to User Description View
+          Navigator.pop(context);
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => const UserView(),
+          ));
+        },
+        child: Container(
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top,
+            bottom: 24,
+          ),
+          child: Column(
+            children: const [
+              CircleAvatar(
+                radius: 52,
+                backgroundColor: Colors.grey,
+              ),
+              SizedBox(
+                height: 12,
+              ),
+              Text(
+                'User name',
+                style: TextStyle(fontSize: 22, color: Colors.white),
+              ),
+              Text(
+                'user@mail.com',
+                style: TextStyle(fontSize: 22, color: Colors.white),
+              )
+            ],
+          ),
         ),
-      );
+      ));
 
   Widget buildMenuIrems(BuildContext context) => Container(
         padding: const EdgeInsets.all(24),
@@ -71,35 +129,39 @@ class NavigationDrawer extends StatelessWidget {
           runSpacing: 16, //Vertical Spacing
           children: [
             ListTile(
-              leading: const Icon(Icons.home_outlined),
-              title: const Text('My profile'),
+              leading: const Icon(Icons.dashboard_customize_outlined),
+              title: const Text('Dashboards'),
               onTap: (() {}),
             ),
             ListTile(
               leading: const Icon(Icons.dangerous_outlined),
               title: const Text('Risk'),
               onTap: (() => Navigator.of(context).push(MaterialPageRoute(
-                  builder: ((context) => const risksView())))),
+                  builder: ((context) => const RisksView())))),
             ),
             ListTile(
               leading: const Icon(Icons.home_outlined),
               title: const Text('Locations'),
-              onTap: (() {}),
+              onTap: (() => Navigator.of(context).push(MaterialPageRoute(
+                  builder: ((context) => const LocationsView())))),
             ),
             ListTile(
               leading: const Icon(Icons.work_history_outlined),
-              title: const Text('Works'),
-              onTap: (() {}),
+              title: const Text('Current Works'),
+              onTap: (() => Navigator.of(context).push(MaterialPageRoute(
+                  builder: ((context) => const CurrentWorksView())))),
             ),
             ListTile(
               leading: const Icon(Icons.person_outlined),
               title: const Text('Job Profiles'),
-              onTap: (() {}),
+              onTap: (() => Navigator.of(context).push(MaterialPageRoute(
+                  builder: ((context) => const JobProfilesView())))),
             ),
             ListTile(
               leading: const Icon(Icons.construction_outlined),
               title: const Text('Auth'),
-              onTap: (() {}),
+              onTap: (() => Navigator.of(context).push(MaterialPageRoute(
+                  builder: ((context) => const WorkAuthView())))),
             ),
           ],
         ),

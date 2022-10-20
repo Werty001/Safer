@@ -6,13 +6,13 @@ import 'package:my_app/services/auth/bloc/auth_bloc.dart';
 import 'package:my_app/services/auth/bloc/auth_event.dart';
 import 'package:my_app/services/auth/bloc/auth_state.dart';
 import 'package:my_app/services/auth/firebase_auth_provider.dart';
-import 'package:my_app/views/forgot_password_view.dart';
+import 'package:my_app/views/Login_auth/forgot_password_view.dart';
 import 'package:my_app/views/home_view.dart';
-import 'package:my_app/views/login_view.dart';
+import 'package:my_app/views/Login_auth/login_view.dart';
 import 'package:my_app/views/Risks/create_update_risk_view.dart';
 import 'package:my_app/views/Risks/risks_view.dart';
-import 'package:my_app/views/register_view.dart';
-import 'package:my_app/views/verify_email_view.dart';
+import 'package:my_app/views/Login_auth/register_view.dart';
+import 'package:my_app/views/Login_auth/verify_email_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
