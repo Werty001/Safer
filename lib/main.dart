@@ -10,7 +10,6 @@ import 'package:my_app/views/Login_auth/forgot_password_view.dart';
 import 'package:my_app/views/home_view.dart';
 import 'package:my_app/views/Login_auth/login_view.dart';
 import 'package:my_app/views/Risks/create_update_risk_view.dart';
-import 'package:my_app/views/Risks/risks_view.dart';
 import 'package:my_app/views/Login_auth/register_view.dart';
 import 'package:my_app/views/Login_auth/verify_email_view.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

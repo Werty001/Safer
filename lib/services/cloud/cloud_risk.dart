@@ -6,15 +6,25 @@ import 'package:flutter/foundation.dart';
 class Cloudrisk {
   final String documentId;
   final String ownerUserId;
-  final String text;
+  final String type;
+  final String subtype;
+  final int danger;
+  final int jobprofiles;
+  
   const Cloudrisk({
     required this.documentId,
     required this.ownerUserId,
-    required this.text,
+    required this.type,
+    required this.subtype,
+    required this.danger,
+    required this.jobprofiles,
   });
 
   Cloudrisk.fromSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot)
       : documentId = snapshot.id,
         ownerUserId = snapshot.data()[ownerUserIdFieldName],
-        text = snapshot.data()[textFieldName] as String;
+        type = snapshot.data()[typeFieldName] as String;
+        subtype = snapshot.data()[subtypeFieldName] as String;
+        danger = snapshot.data()[dangerFieldName] as int;
+        jobprofiles = snapshot.data()[jobprofileFieldName] as int;
 }

@@ -694,7 +694,7 @@ static NSString *const kFIRParameterTravelClass NS_SWIFT_NAME(AnalyticsParameter
 /// a general purpose parameter that is useful for accumulating a key metric that pertains to an
 /// event. Examples include revenue, distance, time and points. Value should be specified as Int or
 /// Double.
-/// risks: Values for pre-defined currency-related events (such as @c AnalyticsEventAddToCart)
+/// Notes: Values for pre-defined currency-related events (such as @c AnalyticsEventAddToCart)
 /// should be supplied using Double and must be accompanied by a @c AnalyticsParameterCurrency
 /// parameter. The valid range of accumulated values is
 /// [-9,223,372,036,854.77, 9,223,372,036,854.77]. Supplying a non-numeric value, omitting the

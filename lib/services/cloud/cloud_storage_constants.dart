@@ -1,2 +1,5 @@
 const ownerUserIdFieldName = 'user_id';
-const textFieldName = 'text';
+const typeFieldName = 'type';
+const subtypeFieldName = 'subtype';
+const dangerFieldName = 'danger';
+const jobprofileFieldName = 'job_profile';

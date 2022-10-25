@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:my_app/extensions/list/filter.dart';
 import 'package:my_app/services/crud/crud_exceptions.dart';
+import 'package:my_app/services/crud/user_service.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' show join;
@@ -10,13 +13,13 @@ import 'package:path/path.dart' show join;
 class risksService {
   Database? _db;
 
-  List<Databaserisk> _risks = [];
+  List<RiskModel> _risks = [];
 
-  DatabaseUser? _user;
+  UserModel? _user;
 
   static final risksService _shared = risksService._sharedInstance();
   risksService._sharedInstance() {
-    _risksStreamController = StreamController<List<Databaserisk>>.broadcast(
+    _risksStreamController = StreamController<List<RiskModel>>.broadcast(
       onListen: () {
         _risksStreamController.sink.add(_risks);
       },
@@ -24,9 +27,9 @@ class risksService {
   }
   factory risksService() => _shared;
 
-  late final StreamController<List<Databaserisk>> _risksStreamController;
+  late final StreamController<List<RiskModel>> _risksStreamController;
 
-  Stream<List<Databaserisk>> get allrisks =>
+  Stream<List<RiskModel>> get allrisks =>
       _risksStreamController.stream.filter((risk) {
         final currentUser = _user;
         if (currentUser != null) {
@@ -36,36 +39,18 @@ class risksService {
         }
       });
 
-  Future<DatabaseUser> getOrCreateUser({
-    required String email,
-    bool setAsCurrentUser = true,
-  }) async {
-    try {
-      final user = await getUser(email: email);
-      if (setAsCurrentUser) {
-        _user = user;
-      }
-      return user;
-    } on CouldNotFindUser {
-      final createdUser = await createUser(email: email);
-      if (setAsCurrentUser) {
-        _user = createdUser;
-      }
-      return createdUser;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   Future<void> _cacherisks() async {
     final allrisks = await getAllrisks();
     _risks = allrisks.toList();
     _risksStreamController.add(_risks);
   }
 
-  Future<Databaserisk> updaterisk({
-    required Databaserisk risk,
-    required String text,
+  Future<RiskModel> updaterisk({
+    required RiskModel risk,
+    required String type,
+    required String subtype,
+    required Int danger,
+    required Int jobprofile,
   }) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
@@ -77,7 +62,10 @@ class risksService {
     final updatesCount = await db.update(
       riskTable,
       {
-        textColumn: text,
+        typeColumn: type,
+        subtypeColumn: subtype,
+        dangerColumn: danger,
+        jobProfileColumn: jobprofile,
         isSyncedWithCloudColumn: 0,
       },
       where: 'id = ?',
@@ -95,15 +83,15 @@ class risksService {
     }
   }
 
-  Future<Iterable<Databaserisk>> getAllrisks() async {
+  Future<Iterable<RiskModel>> getAllrisks() async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final risks = await db.query(riskTable);
 
-    return risks.map((riskRow) => Databaserisk.fromRow(riskRow));
+    return risks.map((riskRow) => RiskModel.fromRow(riskRow));
   }
 
-  Future<Databaserisk> getrisk({required int id}) async {
+  Future<RiskModel> getrisk({required int id}) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final risks = await db.query(
@@ -116,7 +104,7 @@ class risksService {
     if (risks.isEmpty) {
       throw CouldNotFindrisk();
     } else {
-      final risk = Databaserisk.fromRow(risks.first);
+      final risk = RiskModel.fromRow(risks.first);
       _risks.removeWhere((risk) => risk.id == id);
       _risks.add(risk);
       _risksStreamController.add(_risks);
@@ -149,38 +137,7 @@ class risksService {
     }
   }
 
-  Future<Databaserisk> createrisk({required DatabaseUser owner}) async {
-    await _ensureDbIsOpen();
-    final db = _getDatabaseOrThrow();
-
-    //make sure owner exists in the database with the correct id
-    final dbUser = await getUser(email: owner.email);
-    if (dbUser != owner) {
-      throw CouldNotFindUser();
-    }
-
-    const text = '';
-    //create the risk
-    final riskId = await db.insert(riskTable, {
-      userIdColumn: owner.id,
-      textColumn: text,
-      isSyncedWithCloudColumn: 1,
-    });
-
-    final risk = Databaserisk(
-      id: riskId,
-      userId: owner.id,
-      text: text,
-      isSyncedWithCloud: true,
-    );
-
-    _risks.add(risk);
-    _risksStreamController.add(_risks);
-
-    return risk;
-  }
-
-  Future<DatabaseUser> getUser({required String email}) async {
+  Future<UserModel> getUser({required String email}) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
 
@@ -194,44 +151,46 @@ class risksService {
     if (results.isEmpty) {
       throw CouldNotFindUser();
     } else {
-      return DatabaseUser.fromRow(results.first);
+      return UserModel.fromRow(results.first);
     }
   }
 
-  Future<DatabaseUser> createUser({required String email}) async {
+  Future<RiskModel> createrisk({required UserModel owner}) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
-    final results = await db.query(
-      userTable,
-      limit: 1,
-      where: 'email = ?',
-      whereArgs: [email.toLowerCase()],
-    );
-    if (results.isNotEmpty) {
-      throw UserAlreadyExists();
+
+    //make sure owner exists in the database with the correct id
+    final dbUser = await getUser(email: owner.email);
+    if (dbUser != owner) {
+      throw CouldNotFindUser();
     }
 
-    final userId = await db.insert(userTable, {
-      emailColumn: email.toLowerCase(),
+    const type = '';
+    const subtype = '';
+    //create the risk
+    final riskId = await db.insert(riskTable, {
+      userIdColumn: owner.id,
+      typeColumn: type,
+      subtypeColumn: subtype,
+      dangerColumn: 0,
+      jobProfileColumn: 0,
+      isSyncedWithCloudColumn: 1,
     });
 
-    return DatabaseUser(
-      id: userId,
-      email: email,
+    final risk = RiskModel(
+      id: riskId,
+      userId: owner.id,
+      type: type,
+      subtype: subtype,
+      danger: 0,
+      jobprofile: 0,
+      isSyncedWithCloud: true,
     );
-  }
 
-  Future<void> deleteUser({required String email}) async {
-    await _ensureDbIsOpen();
-    final db = _getDatabaseOrThrow();
-    final deletedCount = await db.delete(
-      userTable,
-      where: 'email = ?',
-      whereArgs: [email.toLowerCase()],
-    );
-    if (deletedCount != 1) {
-      throw CouldNotDeleteUser();
-    }
+    _risks.add(risk);
+    _risksStreamController.add(_risks);
+
+    return risk;
   }
 
   Database _getDatabaseOrThrow() {
@@ -270,8 +229,6 @@ class risksService {
       final dbPath = join(docsPath.path, dbName);
       final db = await openDatabase(dbPath);
       _db = db;
-      //create the user table
-      await db.execute(createUserTable);
       //create risk table
       await db.execute(createriskTable);
       await _cacherisks();
@@ -281,77 +238,63 @@ class risksService {
   }
 }
 
-@immutable
-class DatabaseUser {
-  final int id;
-  final String email;
-  const DatabaseUser({
-    required this.id,
-    required this.email,
-  });
-
-  DatabaseUser.fromRow(Map<String, Object?> map)
-      : id = map[idColumn] as int,
-        email = map[emailColumn] as String;
-
-  @override
-  String toString() => 'Person, ID = $id, email = $email';
-
-  @override
-  bool operator ==(covariant DatabaseUser other) => id == other.id;
-
-  @override
-  int get hashCode => id.hashCode;
-}
-
-class Databaserisk {
+class RiskModel {
   final int id;
   final int userId;
-  final String text;
+  final String type;
+  final String subtype;
+  final int danger;
+  final int jobprofile;
   final bool isSyncedWithCloud;
 
-  Databaserisk({
+  RiskModel({
     required this.id,
     required this.userId,
-    required this.text,
+    required this.type,
+    required this.subtype,
+    required this.danger,
+    required this.jobprofile,
     required this.isSyncedWithCloud,
   });
 
-  Databaserisk.fromRow(Map<String, Object?> map)
+  RiskModel.fromRow(Map<String, Object?> map)
       : id = map[idColumn] as int,
         userId = map[userIdColumn] as int,
-        text = map[textColumn] as String,
+        type = map[typeColumn] as String,
+        subtype = map[subtypeColumn] as String,
+        danger = map[dangerColumn] as int,
+        jobprofile = map[jobProfileColumn] as int,
         isSyncedWithCloud =
             (map[isSyncedWithCloudColumn] as int) == 1 ? true : false;
 
   @override
   String toString() =>
-      'risk, ID = $id, userId = $userId, isSyncedWithCloud = $isSyncedWithCloud, text = $text';
+      'risk, ID = $id, userId = $userId, type = $type, subtype = $subtype, danger = $danger, job profiles = $jobprofile, isSyncedWithCloud = $isSyncedWithCloud';
 
   @override
-  bool operator ==(covariant Databaserisk other) => id == other.id;
+  bool operator ==(covariant RiskModel other) => id == other.id;
 
   @override
   int get hashCode => id.hashCode;
 }
 
-const dbName = 'risks.db';
+const dbName = 'Safer.db';
 const riskTable = 'risk';
-const userTable = 'user';
 const idColumn = 'id';
-const emailColumn = 'email';
 const userIdColumn = 'user_id';
-const textColumn = 'text';
+const typeColumn = 'type';
+const subtypeColumn = 'sub_type';
+const dangerColumn = 'danger';
+const jobProfileColumn = 'job_profile';
 const isSyncedWithCloudColumn = 'is_synced_with_cloud';
-const createUserTable = '''CREATE TABLE IF NOT EXISTS "user" (
-         "id"	INTEGER NOT NULL,
-         "email"	TEXT NOT NULL UNIQUE,
-         PRIMARY KEY("id" AUTOINCREMENT)
-       );''';
+
 const createriskTable = '''CREATE TABLE IF NOT EXISTS "risk" (
          "id"	INTEGER NOT NULL,
          "user_id"	INTEGER NOT NULL,
-         "text"	TEXT,
+         "type"	TEXT,
+         "sub_type"	TEXT,
+         "danger"	INTEGER NOT NULL,
+         "job_profile" INTEGER NOT NULL,
          "is_synced_with_cloud"	INTEGER NOT NULL DEFAULT 0,
          FOREIGN KEY("user_id") REFERENCES "user"("id"),
          PRIMARY KEY("id" AUTOINCREMENT)

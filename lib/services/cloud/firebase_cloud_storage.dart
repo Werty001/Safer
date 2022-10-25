@@ -16,10 +16,18 @@ class FirebaseCloudStorage {
 
   Future<void> updaterisk({
     required String documentId,
-    required String text,
+    required String type,
+    required String subtype,
+    required int danger,
+    required int jobprofile,
   }) async {
     try {
-      await risks.doc(documentId).update({textFieldName: text});
+      await risks.doc(documentId).update({
+        typeFieldName: type,
+        subtypeFieldName: subtype,
+        dangerFieldName: danger,
+        jobprofileFieldName: jobprofile,
+      });
     } catch (e) {
       throw CouldNotUpdateriskException();
     }
@@ -36,13 +44,19 @@ class FirebaseCloudStorage {
   Future<Cloudrisk> createNewrisk({required String ownerUserId}) async {
     final document = await risks.add({
       ownerUserIdFieldName: ownerUserId,
-      textFieldName: '',
+      typeFieldName: '',
+      subtypeFieldName: '',
+      dangerFieldName: 0,
+      jobprofileFieldName: 0,
     });
     final fetchedrisk = await document.get();
     return Cloudrisk(
       documentId: fetchedrisk.id,
       ownerUserId: ownerUserId,
-      text: '',
+      type: '',
+      subtype: '',
+      danger: 0,
+      jobprofiles: 0,
     );
   }
 
