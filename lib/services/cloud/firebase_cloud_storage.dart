@@ -18,8 +18,8 @@ class FirebaseCloudStorage {
     required String documentId,
     required String type,
     required String subtype,
-    required int danger,
-    required int jobprofile,
+    required String danger,
+    required String jobprofile,
   }) async {
     try {
       await risks.doc(documentId).update({
@@ -46,8 +46,8 @@ class FirebaseCloudStorage {
       ownerUserIdFieldName: ownerUserId,
       typeFieldName: '',
       subtypeFieldName: '',
-      dangerFieldName: 0,
-      jobprofileFieldName: 0,
+      dangerFieldName: '0',
+      jobprofileFieldName: '0',
     });
     final fetchedrisk = await document.get();
     return Cloudrisk(
@@ -55,8 +55,8 @@ class FirebaseCloudStorage {
       ownerUserId: ownerUserId,
       type: '',
       subtype: '',
-      danger: 0,
-      jobprofiles: 0,
+      danger: '0',
+      jobprofiles: '0',
     );
   }
 

@@ -8,9 +8,9 @@ class Cloudrisk {
   final String ownerUserId;
   final String type;
   final String subtype;
-  final int danger;
-  final int jobprofiles;
-  
+  final String danger;
+  final String jobprofiles;
+
   const Cloudrisk({
     required this.documentId,
     required this.ownerUserId,
@@ -23,8 +23,8 @@ class Cloudrisk {
   Cloudrisk.fromSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot)
       : documentId = snapshot.id,
         ownerUserId = snapshot.data()[ownerUserIdFieldName],
-        type = snapshot.data()[typeFieldName] as String;
-        subtype = snapshot.data()[subtypeFieldName] as String;
-        danger = snapshot.data()[dangerFieldName] as int;
-        jobprofiles = snapshot.data()[jobprofileFieldName] as int;
+        type = snapshot.data()[typeFieldName] as String,
+        subtype = snapshot.data()[subtypeFieldName] as String,
+        danger = snapshot.data()[dangerFieldName] as String,
+        jobprofiles = snapshot.data()[jobprofileFieldName] as String;
 }

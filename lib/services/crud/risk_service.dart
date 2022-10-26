@@ -49,8 +49,8 @@ class risksService {
     required RiskModel risk,
     required String type,
     required String subtype,
-    required Int danger,
-    required Int jobprofile,
+    required String danger,
+    required String jobprofile,
   }) async {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
@@ -182,8 +182,8 @@ class risksService {
       userId: owner.id,
       type: type,
       subtype: subtype,
-      danger: 0,
-      jobprofile: 0,
+      danger: '0',
+      jobprofile: '0',
       isSyncedWithCloud: true,
     );
 
@@ -243,8 +243,8 @@ class RiskModel {
   final int userId;
   final String type;
   final String subtype;
-  final int danger;
-  final int jobprofile;
+  final String danger;
+  final String jobprofile;
   final bool isSyncedWithCloud;
 
   RiskModel({
@@ -262,8 +262,8 @@ class RiskModel {
         userId = map[userIdColumn] as int,
         type = map[typeColumn] as String,
         subtype = map[subtypeColumn] as String,
-        danger = map[dangerColumn] as int,
-        jobprofile = map[jobProfileColumn] as int,
+        danger = map[dangerColumn] as String,
+        jobprofile = map[jobProfileColumn] as String,
         isSyncedWithCloud =
             (map[isSyncedWithCloudColumn] as int) == 1 ? true : false;
 
@@ -293,8 +293,8 @@ const createriskTable = '''CREATE TABLE IF NOT EXISTS "risk" (
          "user_id"	INTEGER NOT NULL,
          "type"	TEXT,
          "sub_type"	TEXT,
-         "danger"	INTEGER NOT NULL,
-         "job_profile" INTEGER NOT NULL,
+         "danger"	TEXT,
+         "job_profile" TEXT,
          "is_synced_with_cloud"	INTEGER NOT NULL DEFAULT 0,
          FOREIGN KEY("user_id") REFERENCES "user"("id"),
          PRIMARY KEY("id" AUTOINCREMENT)

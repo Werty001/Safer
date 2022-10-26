@@ -7,12 +7,14 @@ import 'package:my_app/services/auth/bloc/auth_event.dart';
 import 'package:my_app/services/cloud/firebase_cloud_storage.dart';
 import 'package:my_app/utilities/dialogs/logout_dialog.dart';
 import 'package:my_app/views/Jobs_Profile/job_profile_view.dart';
-import 'package:my_app/views/Locations/locations_view.dart';
+import 'package:my_app/views/Jobs_Profile/job_profile_view.dart';
+import 'package:my_app/views/Locations/job_profile_view1.dart';
 import 'package:my_app/views/Risks/risks_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show ReadContext;
 import 'package:my_app/views/Work_Auth/current_works_view.dart';
 import 'package:my_app/views/Work_Auth/work_auth_view.dart';
 import 'package:my_app/views/user_view.dart';
+import 'package:my_app/views/weather/city_view.dart';
 
 extension Count<T extends Iterable> on Stream<T> {
   Stream<int> get getLength => map((event) => event.length);
@@ -64,8 +66,8 @@ class _HomeViewState extends State<HomeView> {
           )
         ],
       ),
-      body: const Center(
-        child: Text('HOME'),
+      body: Column(
+        children: [Text('HOME')],
       ),
       drawer: const NavigationDrawer(),
     );
@@ -142,8 +144,8 @@ class NavigationDrawer extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.home_outlined),
               title: const Text('Locations'),
-              onTap: (() => Navigator.of(context).push(MaterialPageRoute(
-                  builder: ((context) => const LocationsView())))),
+              onTap: (() => Navigator.of(context).push(
+                  MaterialPageRoute(builder: ((context) => LocationView())))),
             ),
             ListTile(
               leading: const Icon(Icons.work_history_outlined),
@@ -154,14 +156,14 @@ class NavigationDrawer extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.person_outlined),
               title: const Text('Job Profiles'),
-              onTap: (() => Navigator.of(context).push(MaterialPageRoute(
-                  builder: ((context) => const JobProfilesView())))),
+              onTap: (() => Navigator.of(context).push(
+                  MaterialPageRoute(builder: ((context) => JobProfileView())))),
             ),
             ListTile(
               leading: const Icon(Icons.construction_outlined),
               title: const Text('Auth'),
-              onTap: (() => Navigator.of(context).push(MaterialPageRoute(
-                  builder: ((context) => const WorkAuthView())))),
+              onTap: (() => Navigator.of(context).push(
+                  MaterialPageRoute(builder: ((context) => CityScreen())))),
             ),
           ],
         ),

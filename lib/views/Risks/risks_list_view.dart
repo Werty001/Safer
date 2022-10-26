@@ -27,7 +27,7 @@ class RisksListView extends StatelessWidget {
             onTap(risk);
           },
           title: Text(
-            risk.text,
+            risk.type + ' -> ' + risk.subtype,
             maxLines: 1,
             softWrap: true,
             overflow: TextOverflow.ellipsis,

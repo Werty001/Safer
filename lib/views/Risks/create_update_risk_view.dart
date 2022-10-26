@@ -17,12 +17,18 @@ class CreateUpdateriskView extends StatefulWidget {
 class _CreateUpdateriskViewState extends State<CreateUpdateriskView> {
   Cloudrisk? _risk;
   late final FirebaseCloudStorage _risksService;
-  late final TextEditingController _textController;
+  late final TextEditingController _typeController;
+  late final TextEditingController _subtypeController;
+  late final TextEditingController _dangerController;
+  late final TextEditingController _jobprofileController;
 
   @override
   void initState() {
     _risksService = FirebaseCloudStorage();
-    _textController = TextEditingController();
+    _typeController = TextEditingController();
+    _subtypeController = TextEditingController();
+    _dangerController = TextEditingController();
+    _jobprofileController = TextEditingController();
     super.initState();
   }
 
@@ -31,24 +37,39 @@ class _CreateUpdateriskViewState extends State<CreateUpdateriskView> {
     if (risk == null) {
       return;
     }
-    final text = _textController.text;
+    final type = _typeController.text;
+    final subtype = _subtypeController.text;
+    final danger = _dangerController.text;
+    final jobprofile = _jobprofileController.text;
     await _risksService.updaterisk(
       documentId: risk.documentId,
-      text: text,
+      type: type,
+      subtype: subtype,
+      danger: danger,
+      jobprofile: jobprofile,
     );
   }
 
   void _setupTextControllerListener() {
-    _textController.removeListener(_textControllerListener);
-    _textController.addListener(_textControllerListener);
+    _typeController.removeListener(_textControllerListener);
+    _typeController.addListener(_textControllerListener);
+    _subtypeController.removeListener(_textControllerListener);
+    _subtypeController.addListener(_textControllerListener);
+    _dangerController.removeListener(_textControllerListener);
+    _dangerController.addListener(_textControllerListener);
+    _jobprofileController.removeListener(_textControllerListener);
+    _jobprofileController.addListener(_textControllerListener);
   }
 
-  Future<Cloudrisk> createOrGetExistingrisk(BuildContext context) async {
+  Future<Cloudrisk> createOrGetExistingRisk(BuildContext context) async {
     final widgetrisk = context.getArgument<Cloudrisk>();
 
     if (widgetrisk != null) {
       _risk = widgetrisk;
-      _textController.text = widgetrisk.text;
+      _typeController.text = widgetrisk.type;
+      _subtypeController.text = widgetrisk.subtype;
+      _dangerController.text = widgetrisk.danger;
+      _jobprofileController.text = widgetrisk.jobprofiles;
       return widgetrisk;
     }
 
@@ -65,18 +86,24 @@ class _CreateUpdateriskViewState extends State<CreateUpdateriskView> {
 
   void _deleteriskIfTextIsEmpty() {
     final risk = _risk;
-    if (_textController.text.isEmpty && risk != null) {
+    if (_typeController.text.isEmpty && risk != null) {
       _risksService.deleterisk(documentId: risk.documentId);
     }
   }
 
   void _saveriskIfTextriskmpty() async {
     final risk = _risk;
-    final text = _textController.text;
-    if (risk != null && text.isEmpty) {
+    final type = _typeController.text;
+    final subtype = _subtypeController.text;
+    final danger = _dangerController.text;
+    final jobprfile = _jobprofileController.text;
+    if (risk != null && type.isEmpty) {
       await _risksService.updaterisk(
         documentId: risk.documentId,
-        text: text,
+        type: type,
+        subtype: subtype,
+        danger: danger,
+        jobprofile: jobprfile,
       );
     }
   }
@@ -85,7 +112,10 @@ class _CreateUpdateriskViewState extends State<CreateUpdateriskView> {
   void dispose() {
     _deleteriskIfTextIsEmpty();
     _saveriskIfTextriskmpty();
-    _textController.dispose();
+    _typeController.dispose();
+    _subtypeController.dispose();
+    _dangerController.dispose();
+    _jobprofileController.dispose();
     super.dispose();
   }
 
@@ -99,11 +129,17 @@ class _CreateUpdateriskViewState extends State<CreateUpdateriskView> {
         actions: [
           IconButton(
             onPressed: () async {
-              final text = _textController.text;
-              if (_risk == null || text.isEmpty) {
+              final type = _typeController.text;
+              final subtype = _subtypeController.text;
+              final danger = _dangerController.text;
+              final jobprofile = _jobprofileController.text;
+              if (_risk == null || type.isEmpty) {
                 await showCannotShareEmptyriskDialog(context);
               } else {
-                Share.share(text);
+                Share.share(type);
+                Share.share(subtype);
+                Share.share(danger);
+                Share.share(jobprofile);
               }
             },
             icon: const Icon(Icons.share),
@@ -111,18 +147,48 @@ class _CreateUpdateriskViewState extends State<CreateUpdateriskView> {
         ],
       ),
       body: FutureBuilder(
-        future: createOrGetExistingrisk(context),
+        future: createOrGetExistingRisk(context),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               _setupTextControllerListener();
-              return TextField(
-                controller: _textController,
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                decoration: InputDecoration(
-                  hintText: context.loc.start_typing_your_risk,
-                ),
+              return Column(
+                children: [
+                  TextField(
+                    controller: _typeController,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 1,
+                    maxLength: 20,
+                    decoration: InputDecoration(
+                      hintText: context.loc.start_typing_your_risk,
+                    ),
+                  ),
+                  TextField(
+                    controller: _subtypeController,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 1,
+                    maxLength: 20,
+                    decoration: InputDecoration(
+                      hintText: context.loc.start_typing_your_risk,
+                    ),
+                  ),
+                  TextField(
+                    controller: _dangerController,
+                    keyboardType: TextInputType.multiline,
+                    maxLength: 2,
+                    decoration: InputDecoration(
+                      hintText: context.loc.start_typing_your_risk,
+                    ),
+                  ),
+                  TextField(
+                    controller: _jobprofileController,
+                    keyboardType: TextInputType.multiline,
+                    maxLength: 4,
+                    decoration: InputDecoration(
+                      hintText: context.loc.start_typing_your_risk,
+                    ),
+                  ),
+                ],
               );
             default:
               return const CircularProgressIndicator();
