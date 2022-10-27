@@ -4,17 +4,16 @@ import 'package:my_app/extensions/buildcontext/loc.dart';
 import 'package:my_app/services/auth/auth_service.dart';
 import 'package:my_app/services/auth/bloc/auth_bloc.dart';
 import 'package:my_app/services/auth/bloc/auth_event.dart';
-import 'package:my_app/services/cloud/firebase_cloud_storage.dart';
+import 'package:my_app/services/cloud/firebase_cloud_risk_storage.dart';
 import 'package:my_app/utilities/dialogs/logout_dialog.dart';
-import 'package:my_app/views/Jobs_Profile/job_profile_view.dart';
-import 'package:my_app/views/Jobs_Profile/job_profile_view.dart';
+import 'package:my_app/views/Jobs_Profile/job_profile_view_silver.dart';
+import 'package:my_app/views/Jobs_Profile/jobs_profile_view.dart';
 import 'package:my_app/views/Locations/job_profile_view1.dart';
 import 'package:my_app/views/Risks/risks_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show ReadContext;
-import 'package:my_app/views/Work_Auth/current_works_view.dart';
-import 'package:my_app/views/Work_Auth/work_auth_view.dart';
 import 'package:my_app/views/user_view.dart';
 import 'package:my_app/views/weather/city_view.dart';
+import 'package:my_app/views/weather/loading_view.dart';
 
 extension Count<T extends Iterable> on Stream<T> {
   Stream<int> get getLength => map((event) => event.length);
@@ -28,12 +27,12 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  late final FirebaseCloudStorage _HomeService;
+  late final FirebaseCloudRiskStorage _HomeService;
   String get userId => AuthService.firebase().currentUser!.id;
 
   @override
   void initState() {
-    _HomeService = FirebaseCloudStorage();
+    _HomeService = FirebaseCloudRiskStorage();
     super.initState();
   }
 
@@ -150,20 +149,26 @@ class NavigationDrawer extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.work_history_outlined),
               title: const Text('Current Works'),
-              onTap: (() => Navigator.of(context).push(MaterialPageRoute(
-                  builder: ((context) => const CurrentWorksView())))),
+              onTap: (() => Navigator.of(context).push(
+                  MaterialPageRoute(builder: ((context) => RisksView())))),
             ),
             ListTile(
               leading: const Icon(Icons.person_outlined),
               title: const Text('Job Profiles'),
-              onTap: (() => Navigator.of(context).push(
-                  MaterialPageRoute(builder: ((context) => JobProfileView())))),
+              onTap: (() => Navigator.of(context)
+                  .push(MaterialPageRoute(builder: ((context) => JobsView())))),
             ),
             ListTile(
               leading: const Icon(Icons.construction_outlined),
               title: const Text('Auth'),
               onTap: (() => Navigator.of(context).push(
                   MaterialPageRoute(builder: ((context) => CityScreen())))),
+            ),
+            ListTile(
+              leading: const Icon(Icons.sunny_snowing),
+              title: const Text('Weather'),
+              onTap: (() => Navigator.of(context).push(
+                  MaterialPageRoute(builder: ((context) => LoadingScreen())))),
             ),
           ],
         ),

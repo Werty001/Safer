@@ -3,7 +3,7 @@ import 'package:my_app/services/cloud/cloud_storage_constants.dart';
 import 'package:flutter/foundation.dart';
 
 @immutable
-class Cloudrisk {
+class CloudRisk {
   final String documentId;
   final String ownerUserId;
   final String type;
@@ -11,7 +11,7 @@ class Cloudrisk {
   final String danger;
   final String jobprofiles;
 
-  const Cloudrisk({
+  const CloudRisk({
     required this.documentId,
     required this.ownerUserId,
     required this.type,
@@ -20,7 +20,7 @@ class Cloudrisk {
     required this.jobprofiles,
   });
 
-  Cloudrisk.fromSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot)
+  CloudRisk.fromSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot)
       : documentId = snapshot.id,
         ownerUserId = snapshot.data()[ownerUserIdFieldName],
         type = snapshot.data()[typeFieldName] as String,

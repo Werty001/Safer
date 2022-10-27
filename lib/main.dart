@@ -6,6 +6,7 @@ import 'package:my_app/services/auth/bloc/auth_bloc.dart';
 import 'package:my_app/services/auth/bloc/auth_event.dart';
 import 'package:my_app/services/auth/bloc/auth_state.dart';
 import 'package:my_app/services/auth/firebase_auth_provider.dart';
+import 'package:my_app/views/Jobs_Profile/create_update_job_view.dart';
 import 'package:my_app/views/Login_auth/forgot_password_view.dart';
 import 'package:my_app/views/home_view.dart';
 import 'package:my_app/views/Login_auth/login_view.dart';
@@ -31,6 +32,7 @@ void main() {
       ),
       routes: {
         createOrUpdateriskRoute: (context) => const CreateUpdateriskView(),
+        createOrUpdatejobRoute: (context) => const CreateUpdatejobView(),
       },
     ),
   );

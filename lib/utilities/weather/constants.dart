@@ -20,7 +20,7 @@ const kConditionTextStyle = TextStyle(
 );
 
 const kInputField = InputDecoration(
-  hintText: 'Enter Your City Name',
+  hintText: 'Enter the city Name',
   hintStyle: TextStyle(
     color: Colors.black45,
   ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_app/constants/routes.dart';
 import 'package:my_app/services/auth/auth_service.dart';
 import 'package:my_app/services/cloud/cloud_risk.dart';
-import 'package:my_app/services/cloud/firebase_cloud_storage.dart';
+import 'package:my_app/services/cloud/firebase_cloud_risk_storage.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart' show ReadContext;
 import 'package:my_app/views/Risks/risks_list_view.dart';
@@ -19,12 +19,12 @@ class CurrentWorksView extends StatefulWidget {
 }
 
 class _CurrentWorksViewState extends State<CurrentWorksView> {
-  late final FirebaseCloudStorage _RisksService;
+  late final FirebaseCloudRiskStorage _RisksService;
   String get userId => AuthService.firebase().currentUser!.id;
 
   @override
   void initState() {
-    _RisksService = FirebaseCloudStorage();
+    _RisksService = FirebaseCloudRiskStorage();
     super.initState();
   }
 
@@ -49,7 +49,7 @@ class _CurrentWorksViewState extends State<CurrentWorksView> {
             case ConnectionState.waiting:
             case ConnectionState.active:
               if (snapshot.hasData) {
-                final allRisks = snapshot.data as Iterable<Cloudrisk>;
+                final allRisks = snapshot.data as Iterable<CloudRisk>;
                 return RisksListView(
                   risks: allRisks,
                   onDeleterisk: (Risk) async {

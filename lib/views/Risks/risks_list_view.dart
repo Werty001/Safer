@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:my_app/services/cloud/cloud_risk.dart';
 import 'package:my_app/utilities/dialogs/delete_dialog.dart';
 
-typedef RiskCallback = void Function(Cloudrisk risk);
+typedef RiskCallback = void Function(CloudRisk risk);
 
 class RisksListView extends StatelessWidget {
-  final Iterable<Cloudrisk> risks;
+  final Iterable<CloudRisk> risks;
   final RiskCallback onDeleterisk;
   final RiskCallback onTap;
 

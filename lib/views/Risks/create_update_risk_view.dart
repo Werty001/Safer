@@ -4,7 +4,7 @@ import 'package:my_app/services/auth/auth_service.dart';
 import 'package:my_app/utilities/dialogs/cannot_share_empty_risk_dialog.dart';
 import 'package:my_app/utilities/generics/get_arguments.dart';
 import 'package:my_app/services/cloud/cloud_risk.dart';
-import 'package:my_app/services/cloud/firebase_cloud_storage.dart';
+import 'package:my_app/services/cloud/firebase_cloud_risk_storage.dart';
 import 'package:share_plus/share_plus.dart';
 
 class CreateUpdateriskView extends StatefulWidget {
@@ -15,8 +15,8 @@ class CreateUpdateriskView extends StatefulWidget {
 }
 
 class _CreateUpdateriskViewState extends State<CreateUpdateriskView> {
-  Cloudrisk? _risk;
-  late final FirebaseCloudStorage _risksService;
+  CloudRisk? _risk;
+  late final FirebaseCloudRiskStorage _risksService;
   late final TextEditingController _typeController;
   late final TextEditingController _subtypeController;
   late final TextEditingController _dangerController;
@@ -24,7 +24,7 @@ class _CreateUpdateriskViewState extends State<CreateUpdateriskView> {
 
   @override
   void initState() {
-    _risksService = FirebaseCloudStorage();
+    _risksService = FirebaseCloudRiskStorage();
     _typeController = TextEditingController();
     _subtypeController = TextEditingController();
     _dangerController = TextEditingController();
@@ -61,8 +61,8 @@ class _CreateUpdateriskViewState extends State<CreateUpdateriskView> {
     _jobprofileController.addListener(_textControllerListener);
   }
 
-  Future<Cloudrisk> createOrGetExistingRisk(BuildContext context) async {
-    final widgetrisk = context.getArgument<Cloudrisk>();
+  Future<CloudRisk> createOrGetExistingRisk(BuildContext context) async {
+    final widgetrisk = context.getArgument<CloudRisk>();
 
     if (widgetrisk != null) {
       _risk = widgetrisk;

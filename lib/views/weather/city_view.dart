@@ -13,12 +13,7 @@ class _CityScreenState extends State<CityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('images/city_background.jpg'),
-            fit: BoxFit.cover,
-          ),
-        ),
+        decoration: BoxDecoration(),
         constraints: BoxConstraints.expand(),
         child: SafeArea(
           child: Column(
@@ -31,7 +26,6 @@ class _CityScreenState extends State<CityScreen> {
                   },
                   child: Icon(
                     Icons.arrow_back_ios,
-                    size: 50.0,
                   ),
                 ),
               ),
@@ -52,7 +46,6 @@ class _CityScreenState extends State<CityScreen> {
                 },
                 child: Text(
                   'Get Weather',
-                  style: kButtonTextStyle,
                 ),
               ),
             ],
